@@ -1,8 +1,9 @@
-Announcements
-=============
+A web app for uploading photos and manipulating them with various graphical effects.
 
-sbt script is there, just run it from the project base dir:
+`sbt run`
 
-    ./sbt
+### Local Setup
 
-There is still some **pizza** at the front reception desk.
+Necessary Installs:
+* [Unfiltered Http setup](http://unfiltered.databinder.net/Try+Unfiltered.html)
+* [mongo stuff](http://mongodb.github.io/casbah/tutorial.html)

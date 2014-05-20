@@ -2,8 +2,10 @@ package bitshow
 
 import unfiltered.request._
 import unfiltered.response._
+import unfiltered.netty._
 
-import org.clapper.avsl.Logger
+import unfiltered.netty.request._
+
 import java.io.{ByteArrayOutputStream, InputStream}
 
 
@@ -24,11 +26,9 @@ object Pipe {
 
 /** Browser front end, serves the page and handles multipart uploads */
 object Browse extends unfiltered.filter.Plan {
-  val logger = Logger(getClass)
 
   def intent = {
     case GET(Path("/")) =>
-      logger.debug("GET /")
       view(<p><form id="bitpusher" enctype="multipart/form-data" action="/up" method="POST">
         <label for="f">upload</label><input type="file" name="f" />
         <input type="submit" value="post"/>
@@ -37,7 +37,6 @@ object Browse extends unfiltered.filter.Plan {
     case POST(Path("/up") & MultiPart(req)) =>
        MultiPartParams.Streamed(req).files("f") match {
          case Seq(f, _*) =>
-            logger.debug("POST /up [ name: %s, contenType: %s]" format(f.name, f.contentType))
             val out = new ByteArrayOutputStream()
             f.stream(Pipe(out))
             val id = DefaultStore.put(Item(f.contentType, out.toByteArray))
@@ -46,7 +45,6 @@ object Browse extends unfiltered.filter.Plan {
        }
 
      case GET(Path(Seg("previews" :: id :: Nil))) =>
-        logger.debug("GET /previews/%s" format id)
         DefaultStore.get(id) match {
           case Some(item) => view(<p>
              spice it up or <a href="/">upload another</a>
@@ -65,9 +63,9 @@ object Browse extends unfiltered.filter.Plan {
      <html>
       <head>
         <title>bitshow</title>
-        <link href="http://fonts.googleapis.com/css?family=Cabin+Sketch:700" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" type="text/css" href="/assets/css/app.css"/>
-        <script src="/assets/js/jquery-1.6.2.min.js" />
+        <link href="http://fonts.googleapis.com/css?family=Cabin+Sketch:700" rel="stylesheet" type="text/css"></link>
+        <link rel="stylesheet" type="text/css" href="/assets/css/app.css"></link>
+        <script src="/assets/js/jquery-1.6.2.min.js"></script>
       </head>
       <body>
        <div id="container">

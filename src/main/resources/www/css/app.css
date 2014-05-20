@@ -19,7 +19,8 @@ h1, h2 {
   font-family: 'Cabin Sketch', cursive;
 }
 input[type='submit'] {
-  display:none;
+  height: 50px;
+  display:inline;
 }
 ul {
   padding:0 0 0 1em;
